@@ -13,11 +13,14 @@ class Main extends Component {
       price : 0,
       searchList : []
     }
+    // this.searchFunction = this.searchFunction.bind(this)
   }
 
   async componentWillMount() {
     await this.setState({productList : this.props.products})
-    console.log(this.state.searchList)
+    console.log(this.state.productList)
+    this.searchFunction("")
+    
   }
 
 
@@ -33,7 +36,17 @@ class Main extends Component {
     )
   }
 
+  // searchFunction(text) {
+  //   this.setState({searchList: [...this.state.productList.filter(item => {
+  //     const newR = ((item.name.toLocaleLowerCase().includes(text)))
+  //     return newR
+  //     })]}
+  //   )
+  //   console.log(this.state.searchList)
+  // }
+
   render() {
+    var STT = 0
     return (
       <div id="content">
         <h1>Add Product</h1>
@@ -77,9 +90,39 @@ class Main extends Component {
               <th scope="col"></th>
             </tr>
           </thead>
-          <ListToBuy products={this.state.productList}
+          { !this.searchList != null ? <tbody id="productList" >
+                { this.state.searchList.map((product, key) => {
+                    return(                    
+                        <tr key={key}>
+                            {/* <th scope="row">{product.id.toString()}</th> */}
+                            { !product.purchased ?
+                                <div style={{width:'0.75rem'}}>
+                                    <th scope="row">{STT+=1}</th>
+                                    <td>{product.name}</td>
+                                    <td>{window.web3.utils.fromWei(product.price.toString(), 'Ether')} Eth</td>
+                                    <td>{product.owner}</td>
+                                    <td>
+                                        <button
+                                            name={product.id}
+                                            value={product.price}
+                                            onClick={(event) => {
+                                                this.props.ListProductOwner(event.target.name, event.target.value)
+                                              }}> 
+                                            Buy
+                                        </button>
+                                    </td>
+                                </div>
+                            :null}
+                        </tr>         
+                    )
+                })}
+            </tbody>
+            :<ListToBuy products={this.state.productList}
+                        ListProductOwner = {this.ListProductOwner}
+            ></ListToBuy>}
+          {/* <ListToBuy products={this.state.productList}
                       ListProductOwner = {this.ListProductOwner}
-          ></ListToBuy>
+          ></ListToBuy> */}
         </table>
         <h2>Product Owned</h2>
         <table className="table">
