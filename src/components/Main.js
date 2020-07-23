@@ -11,18 +11,26 @@ class Main extends Component {
       productList : [],
       name : '',
       price : 0,
-
+      searchList : []
     }
   }
 
   async componentWillMount() {
     await this.setState({productList : this.props.products})
-    console.log(this.state.productList)
+    console.log(this.state.searchList)
   }
 
 
   ListProductOwner = (id,price) =>{
     this.props.purchaseProduct(id,price)
+  }
+
+  searchFunction = (text) => {
+    this.setState({searchList: [...this.state.productList.filter(item => {
+      const newR = ((item.name.toLocaleLowerCase().includes(text)))
+      return newR
+      })]}
+    )
   }
 
   render() {
@@ -58,7 +66,7 @@ class Main extends Component {
         </form>
         <p> </p>
         <h2>Buy Product</h2>
-        <Search></Search>
+        <Search searchFunction = {this.searchFunction}></Search>
         <table className="table">
           <thead>
             <tr>

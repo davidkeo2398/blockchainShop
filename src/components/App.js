@@ -15,7 +15,7 @@ class App extends Component {
       account: '',
       productCount: 0,
       products: [],
-      loading: true
+      loading: true,
     }
     // this.createProduct = this.createProduct.bind(this)
   }
