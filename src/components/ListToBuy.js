@@ -5,11 +5,6 @@ var STT  = 0;
 class ListToBuy extends Component{
 
     render(){
-        onclick = (e) =>{
-            if (typeof this.props.click === 'function') {
-                this.props.click(e.target.value);
-            }
-        }
         return(
             <tbody id="productList" >
                 { this.props.products.map((product, key) => {
@@ -26,7 +21,9 @@ class ListToBuy extends Component{
                                         <button
                                             name={product.id}
                                             value={product.price}
-                                            handleClick={this.onclick}> 
+                                            onClick={(event) => {
+                                                this.props.ListProductOwner(event.target.name, event.target.value)
+                                              }}> 
                                             Buy
                                         </button>
                                     </td>

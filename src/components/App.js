@@ -15,7 +15,7 @@ class App extends Component {
       account: '',
       productCount: 0,
       products: [],
-      loading: true
+      loading: true,
     }
     // this.createProduct = this.createProduct.bind(this)
   }
@@ -23,7 +23,7 @@ class App extends Component {
   async componentWillMount() {
     await this.loadWeb3()
     await this.loadBlockchainData()
-    console.log(this.state.account)
+    console.log(this.purchaseProduct)
   }
 
   async loadBlockchainData() {

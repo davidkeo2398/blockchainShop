@@ -10,29 +10,43 @@ class Main extends Component {
     this.state = {
       productList : [],
       name : '',
-      price : 0
+      price : 0,
+      searchList : []
     }
+    // this.searchFunction = this.searchFunction.bind(this)
   }
 
   async componentWillMount() {
     await this.setState({productList : this.props.products})
-    console.log(this.props.account)
+    console.log(this.state.productList)
+    this.searchFunction("")
+    
   }
 
 
   ListProductOwner = (id,price) =>{
-    this.setState({ loading: true })
-    this.state.marketplace.methods.purchaseProduct(id).send({ from: this.props.account, value: price })
-    .once('receipt', (receipt) => {
-      this.setState({ loading: false })
-    })
+    this.props.purchaseProduct(id,price)
   }
 
-  handleClick=(event) => {
-    this.ListProductOwner(event.target.name, event.target.value)
+  searchFunction = (text) => {
+    this.setState({searchList: [...this.state.productList.filter(item => {
+      const newR = ((item.name.toLocaleLowerCase().includes(text)))
+      return newR
+      })]}
+    )
   }
+
+  // searchFunction(text) {
+  //   this.setState({searchList: [...this.state.productList.filter(item => {
+  //     const newR = ((item.name.toLocaleLowerCase().includes(text)))
+  //     return newR
+  //     })]}
+  //   )
+  //   console.log(this.state.searchList)
+  // }
 
   render() {
+    var STT = 0
     return (
       <div id="content">
         <h1>Add Product</h1>
@@ -65,7 +79,7 @@ class Main extends Component {
         </form>
         <p> </p>
         <h2>Buy Product</h2>
-        <Search></Search>
+        <Search searchFunction = {this.searchFunction}></Search>
         <table className="table">
           <thead>
             <tr>
@@ -76,12 +90,39 @@ class Main extends Component {
               <th scope="col"></th>
             </tr>
           </thead>
-          <ListToBuy products={this.state.productList}
+          { !this.searchList != null ? <tbody id="productList" >
+                { this.state.searchList.map((product, key) => {
+                    return(                    
+                        <tr key={key}>
+                            {/* <th scope="row">{product.id.toString()}</th> */}
+                            { !product.purchased ?
+                                <div style={{width:'0.75rem'}}>
+                                    <th scope="row">{STT+=1}</th>
+                                    <td>{product.name}</td>
+                                    <td>{window.web3.utils.fromWei(product.price.toString(), 'Ether')} Eth</td>
+                                    <td>{product.owner}</td>
+                                    <td>
+                                        <button
+                                            name={product.id}
+                                            value={product.price}
+                                            onClick={(event) => {
+                                                this.props.ListProductOwner(event.target.name, event.target.value)
+                                              }}> 
+                                            Buy
+                                        </button>
+                                    </td>
+                                </div>
+                            :null}
+                        </tr>         
+                    )
+                })}
+            </tbody>
+            :<ListToBuy products={this.state.productList}
+                        ListProductOwner = {this.ListProductOwner}
+            ></ListToBuy>}
+          {/* <ListToBuy products={this.state.productList}
                       ListProductOwner = {this.ListProductOwner}
-                      nameAcc = {this.state.name}
-                      priceAcc = {this.state.price}
-                      click = {this.handleClick}
-          ></ListToBuy>
+          ></ListToBuy> */}
         </table>
         <h2>Product Owned</h2>
         <table className="table">
