@@ -13,9 +13,6 @@ class Search extends Component{
 
     render(){
 
-
-
-
         onchange = e =>{
             this.setState({searchInput : e.target.value})
             console.log(this.state.searchInput)

@@ -10,26 +10,19 @@ class Main extends Component {
     this.state = {
       productList : [],
       name : '',
-      price : 0
+      price : 0,
+
     }
   }
 
   async componentWillMount() {
     await this.setState({productList : this.props.products})
-    console.log(this.props.account)
+    console.log(this.state.productList)
   }
 
 
   ListProductOwner = (id,price) =>{
-    this.setState({ loading: true })
-    this.state.marketplace.methods.purchaseProduct(id).send({ from: this.props.account, value: price })
-    .once('receipt', (receipt) => {
-      this.setState({ loading: false })
-    })
-  }
-
-  handleClick=(event) => {
-    this.ListProductOwner(event.target.name, event.target.value)
+    this.props.purchaseProduct(id,price)
   }
 
   render() {
@@ -78,9 +71,6 @@ class Main extends Component {
           </thead>
           <ListToBuy products={this.state.productList}
                       ListProductOwner = {this.ListProductOwner}
-                      nameAcc = {this.state.name}
-                      priceAcc = {this.state.price}
-                      click = {this.handleClick}
           ></ListToBuy>
         </table>
         <h2>Product Owned</h2>
